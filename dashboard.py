@@ -902,10 +902,10 @@ with tab3:
             rate = rate.sort_values("pct", ascending=False)
 
             def bclr(v):
-                if v >= 90: return "#d94040"
-                if v >= 75: return "#e09020"
-                if v >= 50: return "#c0a820"
-                return "#2aaa60"
+                if v >= 90: return "#ff0000"
+                if v >= 75: return "#ff8c00"
+                if v >= 50: return "#ffe600"
+                return "#3dff67"
 
             mx_r = rate["pct"].max() if len(rate) > 0 else 100
             annots_r = [

@@ -518,16 +518,16 @@ def apply_multi(df, col, sel):
 # ════════════════════════════════════════════════════════════════════
 ICU_KEYS = {
     "أسرة الأجنحة": [],
-    "ICU البالغين": [
+    "ICU": [
         "وحدة العناية المركزة للبالغين", "عناية مركزة للبالغين",
         "عناية بالغين", "\\bicu\\b"],
-    "PICU الأطفال": [
+    "PICU": [
         "العناية المركزة للأطفال", "عناية أطفال", "picu"],
-    "NICU حديثي الولادة": [
+    "NICU": [
         "العناية المركزة لحديثي الولادة", "حديثي الولادة", "nicu"],
-    "CCU القلب": [
+    "CCU": [
         "وحدة العناية المركزة للقلب", "عناية القلب", "ccu"],
-    "SDU العناية المتوسطة": [
+    "SDU": [
         "وحدة العناية المتوسطة", "عناية متوسطة", "sdu"],
 }
 ALL_ICU = [k for lst in ICU_KEYS.values() for k in lst]
@@ -577,12 +577,12 @@ st.markdown("""
 <div class="dash-hdr">
   <div>
     <div class="dash-hdr-s">Jeddah First Health Cluster ·
-      نظام إدارة الإحالات والطاقة الاستيعابية</div>
+      إدارة الإحالات والطاقات الاستيعابية</div>
     <div class="dash-hdr-t">🏥 تجمع جدة الصحي الأول – لوحة التحكم</div>
   </div>
   <div style="color:#a8d0f0;font-size:.8rem;text-align:left;line-height:1.7">
     مؤشرات الأداء التشغيلي<br>
-    <span style="color:#fff;font-weight:800">لحظي · تفاعلي</span>
+    <span style="color:#fff;font-weight:800"> </span>
   </div>
 </div>""", unsafe_allow_html=True)
 

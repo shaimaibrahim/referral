@@ -17,7 +17,7 @@ st.set_page_config(
 # ════════════════════════════════════════════════════════════════════
 #  PASSWORD GATE
 # ════════════════════════════════════════════════════════════════════
-PASS = "jfhc2025"
+PASS = "jedc1-2026"
 
 def check_password():
     if st.session_state.get("auth"):
@@ -105,14 +105,16 @@ header[data-testid="stHeader"]{background:transparent!important;height:0!importa
 [data-testid="stSidebar"] h3{color:#1256a0!important;font-size:.86rem!important;font-weight:700!important;}
 [data-testid="stSidebar"] section[data-testid="stSidebarContent"]{padding:.7rem .6rem;}
 
-/* ── Dashboard header ── */
+/* ── Dashboard header – deep navy matching JFHC brand ── */
 .dash-hdr{
-  background:linear-gradient(110deg,#1256a0,#1e80d0,#1256a0);
-  border-radius:12px;padding:12px 24px;margin-bottom:14px;
+  background:linear-gradient(110deg,#061e3a 0%,#0d3a70 50%,#061e3a 100%);
+  border-radius:12px;padding:14px 26px;margin-bottom:14px;
   display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 4px 16px rgba(18,86,160,.22);}
-.dash-hdr-t{color:#fff;font-size:1.35rem;font-weight:900;margin:0;}
-.dash-hdr-s{color:#a8d0f0;font-size:.76rem;margin-top:1px;}
+  border:1px solid #1a4a80;
+  box-shadow:0 6px 28px rgba(4,20,50,.55);}
+.dash-hdr-t{color:#ffffff;font-size:1.42rem;font-weight:900;margin:0;
+  letter-spacing:.3px;text-shadow:0 1px 6px rgba(0,0,0,.3);}
+.dash-hdr-s{color:#7ab8e0;font-size:.76rem;margin-top:2px;}
 
 /* ── KPI cards ── */
 .krow{display:flex;gap:10px;margin-bottom:14px;}
@@ -157,21 +159,21 @@ header[data-testid="stHeader"]{background:transparent!important;height:0!importa
 [data-baseweb="tag"]{background:#1256a0!important;color:#fff!important;}
 [data-baseweb="tag"] span{color:#fff!important;}
 
-/* ── Dataframe: blue header (#1256a0), white rows, dark text ── */
+/* ── Dataframe: navy header, very light rows, dark text ── */
 [data-testid="stDataFrame"] table{border-collapse:collapse!important;}
 [data-testid="stDataFrame"] thead tr th{
-  background:#1256a0!important;color:#ffffff!important;
+  background:#0e3f7a!important;color:#ffffff!important;
   font-size:.83rem!important;font-weight:700!important;
-  border:1px solid #0e3f7a!important;padding:8px 10px!important;}
+  border:1px solid #0a2e5a!important;padding:8px 10px!important;}
 [data-testid="stDataFrame"] tbody tr td{
-  background:#ffffff!important;color:#0d2840!important;
+  background:#f8fbff!important;color:#0d2840!important;
   font-size:.83rem!important;border:1px solid #ddeef8!important;
   padding:7px 10px!important;}
-[data-testid="stDataFrame"] tbody tr:nth-child(even) td{background:#f0f7ff!important;}
+[data-testid="stDataFrame"] tbody tr:nth-child(even) td{background:#edf4fc!important;}
 [data-testid="stDataFrame"] [data-testid="stDataFrameGlideDataEditor"]{
-  --gdg-bg-cell:#ffffff!important;
-  --gdg-bg-cell-medium:#f0f7ff!important;
-  --gdg-bg-header:#1256a0!important;
+  --gdg-bg-cell:#f8fbff!important;
+  --gdg-bg-cell-medium:#edf4fc!important;
+  --gdg-bg-header:#0e3f7a!important;
   --gdg-text-header:#ffffff!important;
   --gdg-text-dark:#0d2840!important;
   --gdg-border-color:#ddeef8!important;}
@@ -518,16 +520,16 @@ def apply_multi(df, col, sel):
 # ════════════════════════════════════════════════════════════════════
 ICU_KEYS = {
     "أسرة الأجنحة": [],
-    "ICU": [
+    "ICU البالغين": [
         "وحدة العناية المركزة للبالغين", "عناية مركزة للبالغين",
         "عناية بالغين", "\\bicu\\b"],
-    "PICU": [
+    "PICU الأطفال": [
         "العناية المركزة للأطفال", "عناية أطفال", "picu"],
-    "NICU": [
+    "NICU حديثي الولادة": [
         "العناية المركزة لحديثي الولادة", "حديثي الولادة", "nicu"],
-    "CCU": [
+    "CCU القلب": [
         "وحدة العناية المركزة للقلب", "عناية القلب", "ccu"],
-    "SDU": [
+    "SDU العناية المتوسطة": [
         "وحدة العناية المتوسطة", "عناية متوسطة", "sdu"],
 }
 ALL_ICU = [k for lst in ICU_KEYS.values() for k in lst]
@@ -575,14 +577,33 @@ df_b = load_file(file_beds)
 # ════════════════════════════════════════════════════════════════════
 st.markdown("""
 <div class="dash-hdr">
-  <div>
-    <div class="dash-hdr-s">Jeddah First Health Cluster ·
-      إدارة الإحالات والطاقات الاستيعابية</div>
-    <div class="dash-hdr-t">🏥 تجمع جدة الصحي الأول – لوحة التحكم</div>
+  <div style="display:flex;align-items:center;gap:18px">
+    <!-- JFHC snowflake logo (SVG approximation) -->
+    <svg width="54" height="54" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="20" rx="7" ry="15" fill="#90c8f0" opacity=".9"/>
+      <ellipse cx="50" cy="20" rx="7" ry="15" fill="#90c8f0" opacity=".9"
+               transform="rotate(60 50 50)"/>
+      <ellipse cx="50" cy="20" rx="7" ry="15" fill="#90c8f0" opacity=".9"
+               transform="rotate(120 50 50)"/>
+      <ellipse cx="50" cy="20" rx="7" ry="15" fill="#90c8f0" opacity=".9"
+               transform="rotate(180 50 50)"/>
+      <ellipse cx="50" cy="20" rx="7" ry="15" fill="#90c8f0" opacity=".9"
+               transform="rotate(240 50 50)"/>
+      <ellipse cx="50" cy="20" rx="7" ry="15" fill="#90c8f0" opacity=".9"
+               transform="rotate(300 50 50)"/>
+      <circle cx="50" cy="50" r="16" fill="#4ab0e8" opacity=".95"/>
+      <circle cx="50" cy="50" r="9"  fill="#0d3a70"/>
+    </svg>
+    <div>
+      <div class="dash-hdr-s">Jeddah First Health Cluster · إدارة الإحالات والطاقات الاستيعابية</div>
+      <div class="dash-hdr-t">تجمع جـــدة الصحي الأول</div>
+    </div>
   </div>
-  <div style="color:#a8d0f0;font-size:.8rem;text-align:left;line-height:1.7">
-    مؤشرات الأداء التشغيلي<br>
-    <span style="color:#fff;font-weight:800"> </span>
+  <div style="color:#80b8e0;font-size:.78rem;text-align:left;line-height:1.9">
+    لوحة التحكم التشغيلية<br>
+    <span style="color:#c8e8ff;font-weight:800;font-size:.82rem">
+      مؤشرات الإحالات والطاقة الاستيعابية
+    </span>
   </div>
 </div>""", unsafe_allow_html=True)
 

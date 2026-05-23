@@ -340,7 +340,11 @@ def pie_chart(series, h=460, colors=None, col_key=""):
     Returns nothing – renders in place.
     """
     counts = series.value_counts()
-    clrs   = (colors or PIE_BLUE)[:len(counts)]
+    # Build a full palette that covers ALL items using only blue/navy/sky tones.
+    # If there are more items than base colours, cycle through the palette.
+    base_palette = colors or PIE_BLUE
+    n = len(counts)
+    clrs = [base_palette[i % len(base_palette)] for i in range(n)]
 
     fig = go.Figure(go.Pie(
         labels=counts.index.tolist(),
@@ -918,8 +922,27 @@ with tab3:
                       if len(g) > 0 else 0.0)
                   .reset_index(name="pct")
             )
-            # Combined label: "القسم – المنشأة"
-            rate["label"] = rate[Q] + "  –  " + rate["المنشأة"]
+            # Abbreviation map for hospital names → short code
+            HOSP_ABBR = {
+                "مستشفى الملك عبد العزيز بجدة":           "KAH",
+                "مستشفى الملك عبدالعزيز بجدة":            "KAH",
+                "مستشفى الثغر العام":                      "ALTHAG",
+                "مستشفى شرق جدة":                         "EJH",
+                "مستشفى أضم العام":                        "ADAM",
+                "مجمع إرادة والصحة النفسية بجدة":          "MHH",
+                "مجمع ارادة والصحة النفسية بجدة":          "MHH",
+                "مستشفى الليث العام":                      "ALLAITH",
+            }
+            def abbr(name):
+                for full, short in HOSP_ABBR.items():
+                    if full in str(name):
+                        return short
+                # fallback: take first word if still long
+                words = str(name).split()
+                return words[-1] if words else str(name)
+
+            # Combined label: "القسم – اختصار المستشفى"
+            rate["label"] = rate[Q] + "  –  " + rate["المنشأة"].apply(abbr)
             rate = rate.sort_values("pct", ascending=False)
 
             def bclr(v):

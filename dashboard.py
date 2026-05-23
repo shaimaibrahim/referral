@@ -587,7 +587,7 @@ st.markdown("""
   <div style="color:#80b8e0;font-size:.78rem;text-align:left;line-height:1.9">
     لوحة التحكم التشغيلية<br>
     <span style="color:#c8e8ff;font-weight:800;font-size:.90rem">
-      مؤشرات الإحالات والطاقة الاستيعابية
+      مؤشرات الإحالات والطاقات الاستيعابية
     </span>
   </div>
 </div>""", unsafe_allow_html=True)

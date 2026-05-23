@@ -17,7 +17,7 @@ st.set_page_config(
 # ════════════════════════════════════════════════════════════════════
 #  PASSWORD GATE
 # ════════════════════════════════════════════════════════════════════
-PASS = "jedc1-2026"
+PASS = "jfhc2025"
 
 def check_password():
     if st.session_state.get("auth"):
@@ -157,17 +157,24 @@ header[data-testid="stHeader"]{background:transparent!important;height:0!importa
 [data-baseweb="tag"]{background:#1256a0!important;color:#fff!important;}
 [data-baseweb="tag"] span{color:#fff!important;}
 
-/* ── Dataframe: blue header, white rows, dark text ── */
+/* ── Dataframe: blue header (#1256a0), white rows, dark text ── */
 [data-testid="stDataFrame"] table{border-collapse:collapse!important;}
 [data-testid="stDataFrame"] thead tr th{
-  background:#1256a0!important;color:#fff!important;
+  background:#1256a0!important;color:#ffffff!important;
   font-size:.83rem!important;font-weight:700!important;
   border:1px solid #0e3f7a!important;padding:8px 10px!important;}
 [data-testid="stDataFrame"] tbody tr td{
-  background:#fff!important;color:#0d2840!important;
+  background:#ffffff!important;color:#0d2840!important;
   font-size:.83rem!important;border:1px solid #ddeef8!important;
   padding:7px 10px!important;}
-[data-testid="stDataFrame"] tbody tr:nth-child(even) td{background:#f2f8fd!important;}
+[data-testid="stDataFrame"] tbody tr:nth-child(even) td{background:#f0f7ff!important;}
+[data-testid="stDataFrame"] [data-testid="stDataFrameGlideDataEditor"]{
+  --gdg-bg-cell:#ffffff!important;
+  --gdg-bg-cell-medium:#f0f7ff!important;
+  --gdg-bg-header:#1256a0!important;
+  --gdg-text-header:#ffffff!important;
+  --gdg-text-dark:#0d2840!important;
+  --gdg-border-color:#ddeef8!important;}
 
 /* ── ICU unit card ── */
 .icu-card{background:#fff;border:1.5px solid #b8d4ec;border-radius:12px;
@@ -296,29 +303,32 @@ def bar_h(series, h=460, top_n=10):
 #    the colour swatch and label text are always on the SAME LINE
 # ════════════════════════════════════════════════════════════════════
 def _pie_legend_html(counts, colors, max_h=460):
-    """Return an HTML <table> where every row is:
-       [■ swatch] [Name] [Count] [(pct%)]  – all on one line."""
+    """HTML legend table – every item on ONE ROW: [■] [Name] [Count] [(pct%)].
+    All items are shown regardless of count (no truncation).
+    Only blue/navy/sky shades are used (passed via 'colors')."""
+
     total = counts.sum()
     rows  = ""
     for (lbl, val), clr in zip(counts.items(), colors):
         pct = 100 * val / total
         rows += (
             f"<tr>"
-            f"<td style='padding:4px 6px 4px 0;vertical-align:middle;white-space:nowrap'>"
+            f"<td style='padding:3px 6px 3px 0;vertical-align:middle;white-space:nowrap'>"
             f"<span style='display:inline-block;width:13px;height:13px;"
-            f"border-radius:3px;background:{clr};vertical-align:middle'></span></td>"
-            f"<td style='padding:4px 8px 4px 0;color:#0d2840;font-weight:600;"
-            f"font-size:.82rem;vertical-align:middle;white-space:nowrap'>{lbl}</td>"
-            f"<td style='padding:4px 6px;color:#1256a0;font-weight:700;"
-            f"font-size:.82rem;vertical-align:middle;text-align:left;"
+            f"border-radius:3px;background:{clr};flex-shrink:0;"
+            f"vertical-align:middle'></span></td>"
+            f"<td style='padding:3px 8px 3px 0;color:#0d2840;font-weight:600;"
+            f"font-size:.81rem;vertical-align:middle;white-space:nowrap'>{lbl}</td>"
+            f"<td style='padding:3px 6px;color:#1256a0;font-weight:700;"
+            f"font-size:.81rem;vertical-align:middle;text-align:left;"
             f"white-space:nowrap'>{val:,}</td>"
-            f"<td style='padding:4px 2px;color:#4a7090;font-size:.76rem;"
+            f"<td style='padding:3px 2px;color:#4a7090;font-size:.75rem;"
             f"vertical-align:middle;white-space:nowrap'>({pct:.1f}%)</td>"
             f"</tr>"
         )
+    # No max-height cap – show all items; container scrolls if truly needed
     return (
-        f"<div style='overflow-y:auto;max-height:{max_h}px;direction:rtl;"
-        f"padding-top:6px'>"
+        f"<div style='overflow-y:auto;direction:rtl;padding-top:4px'>"
         f"<table style='border-collapse:collapse;font-family:Cairo,sans-serif;"
         f"width:100%'>{rows}</table></div>"
     )
@@ -351,8 +361,8 @@ def pie_chart(series, h=460, colors=None, col_key=""):
                         font_size=13, font_color="#0d2840"),
     )
 
-    # Split: pie on left, HTML legend on right
-    col_a, col_b = st.columns([1.6, 1])
+    # Split: pie on left (wider), HTML legend on right showing ALL items
+    col_a, col_b = st.columns([1.5, 1])
     with col_a:
         st.plotly_chart(fig, use_container_width=True, key=f"pie_{col_key}")
     with col_b:
@@ -469,7 +479,9 @@ def apply_date(df, col, d0, d1):
     if d0:
         df = df[df[col] >= pd.Timestamp(d0)]
     if d1:
-        df = df[df[col] <= pd.Timestamp(d1)]
+        # Add end-of-day so the chosen end date is fully included
+        end = pd.Timestamp(d1) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
+        df = df[df[col] <= end]
     return df
 
 def date_bounds(df, col):
@@ -814,7 +826,12 @@ with tab3:
         ]
 
         sec("إشغال أسرة الأجنحة والعنايات المركزة", "🏥")
-        pcols = st.columns(6)
+
+        # Row 1: first 3 units
+        row1 = st.columns(3)
+        # Row 2: next 3 units
+        row2 = st.columns(3)
+        pcols = row1 + row2
 
         for i, (lbl, sub) in enumerate(units):
             with pcols[i]:
@@ -889,27 +906,31 @@ with tab3:
                     st.dataframe(it2, use_container_width=True, hide_index=True, height=180)
             st.markdown("---")
 
-        # ── معدل إشغال الأسرة لكل قسم ───────────────────────────
-        if OCC in df.columns and Q in df.columns:
+        # ── معدل إشغال الأسرة لكل قسم (مصنف بالقسم الرئيسي + المنشأة) ────
+        if OCC in df.columns and Q in df.columns and "المنشأة" in df.columns:
             sec("معدل إشغال الأسرة لكل قسم", "📊")
+
+            # Group by القسم الرئيسي + المنشأة for full context
             rate = (
-                df.groupby(Q)
+                df.groupby([Q, "المنشأة"])
                   .apply(lambda g: round(
                       100 * count_kw(g[OCC], ["مشغول"]) / len(g), 1)
                       if len(g) > 0 else 0.0)
                   .reset_index(name="pct")
             )
+            # Combined label: "القسم – المنشأة"
+            rate["label"] = rate[Q] + "  –  " + rate["المنشأة"]
             rate = rate.sort_values("pct", ascending=False)
 
             def bclr(v):
-                if v >= 90: return "#ff0000"
-                if v >= 75: return "#ff8c00"
-                if v >= 50: return "#ffe600"
-                return "#3dff67"
+                if v >= 90: return "#d94040"
+                if v >= 75: return "#e09020"
+                if v >= 50: return "#c0a820"
+                return "#2aaa60"
 
             mx_r = rate["pct"].max() if len(rate) > 0 else 100
             annots_r = [
-                dict(x=row[Q], y=row["pct"],
+                dict(x=row["label"], y=row["pct"],
                      text=f"<b>{row['pct']}%</b>",
                      xanchor="center", yanchor="bottom",
                      showarrow=False,
@@ -918,14 +939,14 @@ with tab3:
                 for _, row in rate.iterrows()
             ]
             fig_r = go.Figure(go.Bar(
-                x=rate[Q], y=rate["pct"],
+                x=rate["label"], y=rate["pct"],
                 marker_color=[bclr(v) for v in rate["pct"]],
                 marker_line_color="#a8c8e0", marker_line_width=.8,
                 text=None,
-                hovertemplate="<b>%{x}</b><br>%{y}%<extra></extra>",
+                hovertemplate="<b>%{x}</b><br>معدل الإشغال: %{y}%<extra></extra>",
             ))
-            fig_r.update_layout(**_layout(480, mb=100), annotations=annots_r)
-            fig_r.update_xaxes(**_xax(tickangle=-42))
+            fig_r.update_layout(**_layout(520, mb=130), annotations=annots_r)
+            fig_r.update_xaxes(**_xax(tickangle=-45))
             fig_r.update_yaxes(**_yax(range=[0, mx_r * 1.24], ticksuffix="%"))
             st.plotly_chart(fig_r, use_container_width=True)
 
